@@ -258,4 +258,4 @@ jobs:
           cd Mint
           swift run mint install yonaskolb/mint
       - name: Lint
-        run: ./scripts/lint.sh
+        run: ./Scripts/lint.sh
