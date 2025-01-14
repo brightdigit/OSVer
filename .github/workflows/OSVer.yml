@@ -200,7 +200,7 @@ jobs:
           path: .build
           key: spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }
+            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}
             spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}
   
       - name: Build SPM
