@@ -27,8 +27,9 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@testable import OSVer // Replace with your actual module name
 import XCTest
+
+@testable import OSVer  // Replace with your actual module name
 
 final class OSVerTests: XCTestCase {
   // MARK: - Initialization Tests
@@ -37,7 +38,7 @@ final class OSVerTests: XCTestCase {
     let version = OSVer(major: 1, minor: 2)
     XCTAssertEqual(version.major, 1)
     XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 0) // Default value
+    XCTAssertEqual(version.patch, 0)  // Default value
   }
 
   func testInitWithMajorMinorPatch() {
@@ -113,19 +114,20 @@ final class OSVerTests: XCTestCase {
     encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.string
 
     let data = try encoder.encode(version)
-    let string = String(data: data, encoding: .utf8)!.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+    let string = String(data: data, encoding: .utf8)!.trimmingCharacters(
+      in: CharacterSet(charactersIn: "\""))
 
     XCTAssertEqual(string, "1.2.3")
   }
 
   func testDecodingFromObject() throws {
     let json = """
-    {
-        "major": 1,
-        "minor": 2,
-        "patch": 3
-    }
-    """.data(using: .utf8)!
+      {
+          "major": 1,
+          "minor": 2,
+          "patch": 3
+      }
+      """.data(using: .utf8)!
 
     let version = try JSONDecoder().decode(OSVer.self, from: json)
     XCTAssertEqual(version.major, 1)
@@ -135,11 +137,11 @@ final class OSVerTests: XCTestCase {
 
   func testDecodingFromObjectWithoutPatch() throws {
     let json = """
-    {
-        "major": 1,
-        "minor": 2
-    }
-    """.data(using: .utf8)!
+      {
+          "major": 1,
+          "minor": 2
+      }
+      """.data(using: .utf8)!
 
     let version = try JSONDecoder().decode(OSVer.self, from: json)
     XCTAssertEqual(version.major, 1)
@@ -185,7 +187,7 @@ final class OSVerTests: XCTestCase {
 
     var set = Set<OSVer>()
     set.insert(version1)
-    set.insert(version2) // Should not increase size
+    set.insert(version2)  // Should not increase size
     set.insert(version3)
 
     XCTAssertEqual(set.count, 2)
@@ -238,10 +240,10 @@ final class OSVerTests: XCTestCase {
   // MARK: - Fuzzy Tests
 
   func testFuzzyInitialization() {
-    for _ in 0 ..< 1_000 {
-      let major = Int.random(in: 0 ... 100)
-      let minor = Int.random(in: 0 ... 100)
-      let patch = Int.random(in: 0 ... 100)
+    for _ in 0..<1_000 {
+      let major = Int.random(in: 0...100)
+      let minor = Int.random(in: 0...100)
+      let patch = Int.random(in: 0...100)
 
       let version = OSVer(major: major, minor: minor, patch: patch)
       XCTAssertEqual(version.major, major)
@@ -251,14 +253,14 @@ final class OSVerTests: XCTestCase {
   }
 
   func testFuzzyComparison() {
-    for _ in 0 ..< 1_000 {
-      let major1 = Int.random(in: 0 ... 10)
-      let minor1 = Int.random(in: 0 ... 10)
-      let patch1 = Int.random(in: 0 ... 10)
+    for _ in 0..<1_000 {
+      let major1 = Int.random(in: 0...10)
+      let minor1 = Int.random(in: 0...10)
+      let patch1 = Int.random(in: 0...10)
 
-      let major2 = Int.random(in: 0 ... 10)
-      let minor2 = Int.random(in: 0 ... 10)
-      let patch2 = Int.random(in: 0 ... 10)
+      let major2 = Int.random(in: 0...10)
+      let minor2 = Int.random(in: 0...10)
+      let patch2 = Int.random(in: 0...10)
 
       let version1 = OSVer(major: major1, minor: minor1, patch: patch1)
       let version2 = OSVer(major: major2, minor: minor2, patch: patch2)
@@ -280,10 +282,10 @@ final class OSVerTests: XCTestCase {
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
 
-    for _ in 0 ..< 1_000 {
-      let major = Int.random(in: 0 ... 100)
-      let minor = Int.random(in: 0 ... 100)
-      let patch = Int.random(in: 0 ... 100)
+    for _ in 0..<1_000 {
+      let major = Int.random(in: 0...100)
+      let minor = Int.random(in: 0...100)
+      let patch = Int.random(in: 0...100)
 
       let original = OSVer(major: major, minor: minor, patch: patch)
 
@@ -310,10 +312,10 @@ final class OSVerTests: XCTestCase {
   }
 
   func testFuzzyStringParsing() {
-    for _ in 0 ..< 1_000 {
-      let major = Int.random(in: 0 ... 100)
-      let minor = Int.random(in: 0 ... 100)
-      let patch = Int.random(in: 0 ... 100)
+    for _ in 0..<1_000 {
+      let major = Int.random(in: 0...100)
+      let minor = Int.random(in: 0...100)
+      let patch = Int.random(in: 0...100)
 
       let versionString = "\(major).\(minor).\(patch)"
 
@@ -332,10 +334,10 @@ final class OSVerTests: XCTestCase {
     var versions = Set<OSVer>()
     var originalCount = 0
 
-    for _ in 0 ..< 1_000 {
-      let major = Int.random(in: 0 ... 10)
-      let minor = Int.random(in: 0 ... 10)
-      let patch = Int.random(in: 0 ... 10)
+    for _ in 0..<1_000 {
+      let major = Int.random(in: 0...10)
+      let minor = Int.random(in: 0...10)
+      let patch = Int.random(in: 0...10)
 
       let version = OSVer(major: major, minor: minor, patch: patch)
       let (inserted, _) = versions.insert(version)

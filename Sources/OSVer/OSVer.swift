@@ -85,7 +85,8 @@ public struct OSVer: Hashable, Codable, Sendable {
 
     guard
       let major = Int(numbers[0]),
-      let minor = Int(numbers[1]) else {
+      let minor = Int(numbers[1])
+    else {
       throw ParsingError.invalidNumbers
     }
 
@@ -149,9 +150,7 @@ public struct OSVer: Hashable, Codable, Sendable {
 
 extension OSVer {
   public static func == (lhs: OSVer, rhs: OSVer) -> Bool {
-    lhs.major == rhs.major &&
-      lhs.minor == rhs.minor &&
-      lhs.patch == rhs.patch
+    lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch == rhs.patch
   }
 
   public func hash(into hasher: inout Hasher) {

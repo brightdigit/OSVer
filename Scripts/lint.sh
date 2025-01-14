@@ -31,9 +31,9 @@ MINT_RUN="$MINT_CMD run $MINT_ARGS"
 if [ "$LINT_MODE" = "NONE" ]; then
     exit
 elif [ "$LINT_MODE" = "STRICT" ]; then
-    SWIFTFORMAT_OPTIONS=""
+    SWIFTFORMAT_OPTIONS="--strict"
     SWIFTLINT_OPTIONS="--strict"
-else 
+else
     SWIFTFORMAT_OPTIONS=""
     SWIFTLINT_OPTIONS=""
 fi
@@ -42,12 +42,12 @@ pushd "$PACKAGE_DIR" || exit 1
 $MINT_CMD bootstrap -m Mintfile || exit 1
 
 if [ -z "$CI" ]; then
-    $MINT_RUN swiftformat . || exit 1
+    $MINT_RUN swift-format format --configuration .swift-format  --recursive --parallel --in-place Sources Tests || exit 1
     $MINT_RUN swiftlint --autocorrect || exit 1
 fi
 
 if [ -z "$FORMAT_ONLY" ]; then
-    $MINT_RUN swiftformat --lint $SWIFTFORMAT_OPTIONS . || exit 1
+    $MINT_RUN swift-format lint --configuration .swift-format --recursive --parallel $SWIFTFORMAT_OPTIONS Sources Tests || exit 1
     $MINT_RUN swiftlint lint $SWIFTLINT_OPTIONS || exit 1
 fi
 
