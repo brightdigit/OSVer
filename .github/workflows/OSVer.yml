@@ -247,7 +247,9 @@ jobs:
         env:
           cache-name: cache
         with:
-          path: .mint
+          path: |
+            .mint
+            Mint         
           key: ${{ runner.os }}-mint-${{ hashFiles('**/Mintfile') }}
           restore-keys: |
             ${{ runner.os }}-mint-  
