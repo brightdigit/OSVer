@@ -185,11 +185,10 @@ jobs:
       - uses: irgaly/xcode-cache@v1
         if: matrix.type
         with:
-          key: xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
+          key: xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ hashFiles('Package.resolved') }}-${{ github.sha }}
           restore-keys: |
-            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}
-            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}
-          
+            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ hashFiles('Package.resolved') }}-                        
+            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-          
       - name: Cache swift package modules
         id: cache-spm-macos
         if: "!matrix.type"
@@ -198,10 +197,9 @@ jobs:
           cache-name: cache-spm
         with:
           path: .build
-          key: spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
+          key: spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}
-            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}
+            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-
   
       - name: Build SPM
         if: "!matrix.type"
