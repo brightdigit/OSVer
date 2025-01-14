@@ -1,6 +1,6 @@
 //
-//  SemVer+CustomStringConvertible.swift
-//  IPSWDownloads
+//  OSVer+CustomStringConvertible.swift
+//  OSVer
 //
 //  Created by Leo Dion.
 //  Copyright © 2025 BrightDigit.
@@ -27,11 +27,10 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-
 // MARK: - CustomStringConvertible
 
 extension OSVer: CustomStringConvertible {
-    public var description: String {
-        "\(major).\(minor).\(patch)"
-    }
+  public var description: String {
+    "\(major).\(minor).\(patch)"
+  }
 }

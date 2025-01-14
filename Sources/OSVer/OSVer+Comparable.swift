@@ -1,6 +1,6 @@
 //
-//  SemVer+Comparable.swift
-//  IPSWDownloads
+//  OSVer+Comparable.swift
+//  OSVer
 //
 //  Created by Leo Dion.
 //  Copyright © 2025 BrightDigit.
@@ -30,9 +30,13 @@
 // MARK: - Comparable
 
 extension OSVer: Comparable {
-    public static func < (lhs: OSVer, rhs: OSVer) -> Bool {
-        if lhs.major != rhs.major { return lhs.major < rhs.major }
-        if lhs.minor != rhs.minor { return lhs.minor < rhs.minor }
-        return lhs.patch < rhs.patch
+  public static func < (lhs: OSVer, rhs: OSVer) -> Bool {
+    if lhs.major != rhs.major {
+      return lhs.major < rhs.major
     }
+    if lhs.minor != rhs.minor {
+      return lhs.minor < rhs.minor
+    }
+    return lhs.patch < rhs.patch
+  }
 }
