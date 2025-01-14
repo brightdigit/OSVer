@@ -27,9 +27,9 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension SemVer: Comparable {
+extension OSVer: Comparable {
   // swiftlint:disable:next function_body_length cyclomatic_complexity
-  public static func < (lhs: SemVer, rhs: SemVer) -> Bool {
+  public static func < (lhs: OSVer, rhs: OSVer) -> Bool {
     if lhs.major != rhs.major {
       return lhs.major < rhs.major
     }

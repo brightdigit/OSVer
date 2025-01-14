@@ -27,7 +27,7 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension SemVer: CustomStringConvertible {
+extension OSVer: CustomStringConvertible {
   public var description: String {
     var version = "\(major).\(minor).\(patch)"
     if let prerelease {
