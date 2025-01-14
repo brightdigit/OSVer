@@ -5,7 +5,7 @@ set -e  # Exit on any error
 if [ "$(uname)" = "Darwin" ]; then
     DEFAULT_MINT_PATH="/opt/homebrew/bin/mint"
 elif [ "$(uname)" = "Linux" ]; then
-    DEFAULT_MINT_PATH="/home/runner/work/OSVer/OSVer/Mint/.mint/bin"
+    DEFAULT_MINT_PATH="/home/runner/work/OSVer/OSVer/Mint/.mint/bin/mint"
 else
     echo "Unsupported operating system"
     exit 1
