@@ -73,11 +73,11 @@ jobs:
       matrix:
         include:
           # SPM Build Matrix
-          - runs-on: macos-13
+          - runs-on: macos-14
             xcode: "/Applications/Xcode_15.0.1.app"
-          - runs-on: macos-13
+          - runs-on: macos-14
             xcode: "/Applications/Xcode_15.1.app"
-          - runs-on: macos-13
+          - runs-on: macos-14
             xcode: "/Applications/Xcode_15.2.app"
           - runs-on: macos-15
             xcode: "/Applications/Xcode_16.1.app"
@@ -86,17 +86,17 @@ jobs:
           
           # iOS Build Matrix
           - type: ios
-            runs-on: macos-13
+            runs-on: macos-14
             xcode: "/Applications/Xcode_15.0.1.app"
             deviceName: "iPhone 15"
             osVersion: "17.0.1"
           - type: ios
-            runs-on: macos-13
+            runs-on: macos-14
             xcode: "/Applications/Xcode_15.1.app"
             deviceName: "iPhone 15 Pro"
             osVersion: "17.2"
           - type: ios
-            runs-on: macos-13
+            runs-on: macos-14
             xcode: "/Applications/Xcode_15.2.app"
             deviceName: "iPhone 15 Pro Max"
             osVersion: "17.2"
@@ -113,17 +113,17 @@ jobs:
   
           # watchOS Build Matrix
           - type: watchos
-            runs-on: macos-13
+            runs-on: macos-14
             xcode: "/Applications/Xcode_15.0.1.app"
             deviceName: "Apple Watch Series 9 (41mm)"
             osVersion: "10.0"
           - type: watchos
-            runs-on: macos-13
+            runs-on: macos-14
             xcode: "/Applications/Xcode_15.1.app"
             deviceName: "Apple Watch Series 9 (45mm)"
             osVersion: "10.2"
           - type: watchos
-            runs-on: macos-13
+            runs-on: macos-14
             xcode: "/Applications/Xcode_15.2.app"
             deviceName: "Apple Watch Ultra 2 (49mm)"
             osVersion: "10.2"
