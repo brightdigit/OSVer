@@ -11,14 +11,21 @@ let package = Package(
             name: "OSVer",
             targets: ["OSVer"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-testing.git", from: "0.5.1")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "OSVer"),
+        .target(          
+            name: "OSVer"            
+        ),
         .testTarget(
             name: "OSVerTests",
-            dependencies: ["OSVer"]
+            dependencies: [
+                "OSVer",
+                .product(name: "Testing", package: "swift-testing")
+            ]
         ),
     ]
 )
