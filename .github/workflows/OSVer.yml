@@ -218,7 +218,6 @@ jobs:
           -sdk ${{ env.SDK }}
           -destination 'platform=${{ env.PLATFORM }},name=${{ matrix.deviceName }},OS=${{ matrix.osVersion }}'
           -enableCodeCoverage YES
-          build test
   
       # Common Coverage Steps
       - name: Process Coverage
