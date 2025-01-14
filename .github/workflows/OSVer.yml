@@ -168,12 +168,6 @@ jobs:
       - name: Run Swift Package tests
         if: "!matrix.type"
         run: swift test -v --enable-code-coverage
-
-      - name: Enable Swift Testing
-        if: matrix.type
-        run: |
-          mkdir -p ~/Library/org.swift.swiftpm/security/        
-          cp macros.json ~/Library/org.swift.swiftpm/security/            
   
       # Common iOS/watchOS Test Steps
       - name: Run Device Tests
