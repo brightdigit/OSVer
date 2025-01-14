@@ -187,7 +187,7 @@ jobs:
         with:
           key: xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }
+            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}
             xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}
           
       - name: Cache swift package modules
