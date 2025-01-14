@@ -181,20 +181,27 @@ jobs:
               echo "PLATFORM=tvOS Simulator" >> $GITHUB_ENV
               echo "SDK=appletvsimulator" >> $GITHUB_ENV
               ;;
-          esac
-    
+            esac
+      - uses: irgaly/xcode-cache@v1
+        if: matrix.type
+        with:
+          key: xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }
+            xcode-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}
+          
       - name: Cache swift package modules
         id: cache-spm-macos
+        if: "!matrix.type"
         uses: actions/cache@v4
         env:
           cache-name: cache-spm
         with:
           path: .build
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
+          key: spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }}-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}-${{ env.cache-name }
+            spm-${{ runner.os }}-${{ matrix.runs-on }}-${{ env.XCODE_NAME }}
   
       - name: Build SPM
         if: "!matrix.type"
