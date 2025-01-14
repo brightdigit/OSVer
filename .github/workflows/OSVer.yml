@@ -137,7 +137,21 @@ jobs:
             xcode: "/Applications/Xcode_16.2.app"
             deviceName: "Apple Watch Ultra 2 (49mm)"
             osVersion: "11.2"
-  
+    
+          # visionOS Build Matrix
+          - type: visionos
+            runs-on: macos-15
+            xcode: "/Applications/Xcode_16.2.app"
+            deviceName: "Apple Vision Pro"
+            osVersion: "2.1"
+    
+          # tvOS Build Matrix
+          - type: tvos
+            runs-on: macos-15
+            xcode: "/Applications/Xcode_16.2.app"
+            deviceName: "Apple TV 4K (3rd generation)"
+            osVersion: "18.2"
+    
     steps:
       - uses: actions/checkout@v4
       
@@ -146,8 +160,29 @@ jobs:
       
       - name: Setup Xcode
         run: sudo xcode-select -s ${{ matrix.xcode }}/Contents/Developer
-  
-      # SPM Cache Step
+    
+      - name: Set SDK and Platform
+        if: matrix.type
+        run: |
+          case ${{ matrix.type }} in
+            ios)
+              echo "PLATFORM=iOS Simulator" >> $GITHUB_ENV
+              echo "SDK=iphonesimulator" >> $GITHUB_ENV
+              ;;
+            watchos)
+              echo "PLATFORM=watchOS Simulator" >> $GITHUB_ENV
+              echo "SDK=watchsimulator" >> $GITHUB_ENV
+              ;;
+            visionos)
+              echo "PLATFORM=visionOS Simulator" >> $GITHUB_ENV
+              echo "SDK=xrsimulator" >> $GITHUB_ENV
+              ;;
+            tvos)
+              echo "PLATFORM=tvOS Simulator" >> $GITHUB_ENV
+              echo "SDK=appletvsimulator" >> $GITHUB_ENV
+              ;;
+          esac
+    
       - name: Cache swift package modules
         id: cache-spm-macos
         uses: actions/cache@v4
@@ -175,8 +210,8 @@ jobs:
         run: >
           xcodebuild test
           -scheme ${{ env.PACKAGE_NAME }}
-          -sdk ${{ matrix.type == 'ios' && 'iphonesimulator' || 'watchsimulator' }}
-          -destination 'platform=${{ matrix.type == 'ios' && 'iOS Simulator' || 'watchOS Simulator' }},name=${{ matrix.deviceName }},OS=${{ matrix.osVersion }}'
+          -sdk ${{ env.SDK }}
+          -destination 'platform=${{ env.PLATFORM }},name=${{ matrix.deviceName }},OS=${{ matrix.osVersion }}'
           -enableCodeCoverage YES
           build test
   
