@@ -233,3 +233,34 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.type && format('{0}{1}', matrix.type, matrix.osVersion) || 'spm' }}
+  lint:
+    name: Linting
+    runs-on: macos-14
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    env:
+      xcode: "/Applications/Xcode_16.2.app"
+    steps:
+      - uses: actions/checkout@v4     
+      - name: Cache mint
+        if: startsWith(matrix.xcode,'/Applications/Xcode_16.1')
+        id: cache-mint
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-mint
+        with:
+          path: .mint
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Set Xcode Name
+        run: echo "XCODE_NAME=$(basename -- ${{ env.xcode }} | sed 's/\.[^.]*$//' | cut -d'_' -f2)" >> $GITHUB_ENV
+      - name: Setup Xcode
+        run: sudo xcode-select -s ${{ env.xcode }}/Contents/Developer || (sudo ls -1 /Applications | grep "Xcode")
+      - name: Install mint
+        run: |
+          brew update
+          brew install mint
+      - name: Lint
+        run: ./scripts/lint.sh
