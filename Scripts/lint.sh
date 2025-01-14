@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e  # Exit on any error
 
 # Detect OS and set paths accordingly
