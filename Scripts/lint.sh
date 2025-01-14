@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e  # Exit on any error
 
-ls ~/.mint/bin/
 # Detect OS and set paths accordingly
 if [ "$(uname)" = "Darwin" ]; then
     DEFAULT_MINT_PATH="/opt/homebrew/bin/mint"
