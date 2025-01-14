@@ -6,7 +6,7 @@ ls ~/.mint/bin/
 if [ "$(uname)" = "Darwin" ]; then
     DEFAULT_MINT_PATH="/opt/homebrew/bin/mint"
 elif [ "$(uname)" = "Linux" ]; then
-    DEFAULT_MINT_PATH="~/.mint/bin/mint"
+    DEFAULT_MINT_PATH="/home/runner/work/OSVer/OSVer/Mint/.mint/bin"
 else
     echo "Unsupported operating system"
     exit 1
