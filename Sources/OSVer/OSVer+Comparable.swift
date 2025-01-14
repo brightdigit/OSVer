@@ -27,49 +27,12 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
+// MARK: - Comparable
+
 extension OSVer: Comparable {
-  // swiftlint:disable:next function_body_length cyclomatic_complexity
-  public static func < (lhs: OSVer, rhs: OSVer) -> Bool {
-    if lhs.major != rhs.major {
-      return lhs.major < rhs.major
+    public static func < (lhs: OSVer, rhs: OSVer) -> Bool {
+        if lhs.major != rhs.major { return lhs.major < rhs.major }
+        if lhs.minor != rhs.minor { return lhs.minor < rhs.minor }
+        return lhs.patch < rhs.patch
     }
-    if lhs.minor != rhs.minor {
-      return lhs.minor < rhs.minor
-    }
-    if lhs.patch != rhs.patch {
-      return lhs.patch < rhs.patch
-    }
-
-    // If everything else is equal, compare pre-release versions
-    switch (lhs.prerelease, rhs.prerelease) {
-    case (nil, nil):
-      return false
-
-    case (nil, .some):
-      return false // Release version is greater than pre-release
-    case (.some, nil):
-      return true // Pre-release version is less than release
-    case let (lhsPre?, rhsPre?):
-      // Compare pre-release identifiers
-      let lhsComponents = lhsPre.split(separator: ".")
-      let rhsComponents = rhsPre.split(separator: ".")
-
-      for (lhs, rhs) in zip(lhsComponents, rhsComponents) {
-        if let lNum = Int(lhs), let rNum = Int(rhs) {
-          if lNum != rNum {
-            return lNum < rNum
-          }
-        } else if Int(lhs) != nil {
-          return true // Numeric is less than non-numeric
-        } else if Int(rhs) != nil {
-          return false // Non-numeric is greater than numeric
-        } else {
-          if lhs != rhs {
-            return lhs.description < rhs.description
-          }
-        }
-      }
-      return lhsComponents.count < rhsComponents.count
-    }
-  }
 }

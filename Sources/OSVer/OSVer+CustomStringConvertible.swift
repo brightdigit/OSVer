@@ -27,15 +27,11 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
+
+// MARK: - CustomStringConvertible
+
 extension OSVer: CustomStringConvertible {
-  public var description: String {
-    var version = "\(major).\(minor).\(patch)"
-    if let prerelease {
-      version += "-\(prerelease)"
+    public var description: String {
+        "\(major).\(minor).\(patch)"
     }
-    if let buildMetadata {
-      version += "+\(buildMetadata)"
-    }
-    return version
-  }
 }
