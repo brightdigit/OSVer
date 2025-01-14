@@ -112,5 +112,6 @@ excluded:
   - Tests
   - DerivedData
   - .build
+  - Mint
 indentation_width:
   indentation_width: 2
