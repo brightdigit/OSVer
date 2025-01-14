@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e  # Exit on any error
 
+ls ~/.mint/bin/
 # Detect OS and set paths accordingly
 if [ "$(uname)" = "Darwin" ]; then
     DEFAULT_MINT_PATH="/opt/homebrew/bin/mint"
 elif [ "$(uname)" = "Linux" ]; then
-    DEFAULT_MINT_PATH="/usr/local/bin/mint"
+    DEFAULT_MINT_PATH="~/.mint/bin/mint"
 else
     echo "Unsupported operating system"
     exit 1
@@ -20,11 +21,7 @@ else
 fi
 
 # Use environment MINT_CMD if set, otherwise use default path
-if [ -z "$GITHUB_ACTION" ]; then
-    MINT_CMD=${MINT_CMD:-$DEFAULT_MINT_PATH}
-else
-    MINT_CMD="mint"
-fi
+MINT_CMD=${MINT_CMD:-$DEFAULT_MINT_PATH}
 
 export MINT_PATH="$PACKAGE_DIR/.mint"
 MINT_ARGS="-n -m $PACKAGE_DIR/Mintfile --silent"
