@@ -35,7 +35,7 @@ public struct OSVer: Hashable, Codable, Sendable {
         case invalidNumbers
     }
     
-  public init(string: String) throws (ParsingError) {
+  public init(string: String) throws {
         let numbers = string.split(separator: ".")
         guard numbers.count >= 2 else {
             throw ParsingError.invalidFormat
