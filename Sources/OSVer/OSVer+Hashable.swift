@@ -12,14 +12,15 @@ extension OSVer {
   ///   - rhs:another OSVer Object
   /// - Returns: True, if equal
   public static func == (lhs: OSVer, rhs: OSVer) -> Bool {
-    lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch == rhs.patch
+    lhs.majorVersion == rhs.majorVersion && lhs.minorVersion == rhs.minorVersion
+      && lhs.patchVersion == rhs.patchVersion
   }
 
   /// Creates a hash from the OSVer,
   /// - Parameter hasher: The hasher.
   public func hash(into hasher: inout Hasher) {
-    hasher.combine(major)
-    hasher.combine(minor)
-    hasher.combine(patch)
+    hasher.combine(majorVersion)
+    hasher.combine(minorVersion)
+    hasher.combine(patchVersion)
   }
 }

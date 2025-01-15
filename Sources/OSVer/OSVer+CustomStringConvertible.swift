@@ -31,6 +31,6 @@
 extension OSVer: CustomStringConvertible {
   /// A string representation of the `OSVer` instance in the format `"major.minor.patch"`.
   public var description: String {
-    "\(major).\(minor).\(patch)"
+    "\(majorVersion).\(minorVersion).\(patchVersion)"
   }
 }

@@ -1,115 +1,153 @@
-//
-//  OSVerTests.swift
-//  OSVer
-//
-//  Created by Leo Dion.
-//  Copyright © 2025 BrightDigit.
-//
-//  Permission is hereby granted, free of charge, to any person
-//  obtaining a copy of this software and associated documentation
-//  files (the “Software”), to deal in the Software without
-//  restriction, including without limitation the rights to use,
-//  copy, modify, merge, publish, distribute, sublicense, and/or
-//  sell copies of the Software, and to permit persons to whom the
-//  Software is furnished to do so, subject to the following
-//  conditions:
-//
-//  The above copyright notice and this permission notice shall be
-//  included in all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
-//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-//  OTHER DEALINGS IN THE SOFTWARE.
-//
-
 import XCTest
 
-@testable import OSVer  // Replace with your actual module name
+@testable import OSVer
 
-final class OSVerTests: XCTestCase {
+final class OSVerBasicTests: XCTestCase {
   // MARK: - Initialization Tests
-
-  func testInitWithMajorMinor() {
-    let version = OSVer(major: 1, minor: 2)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 0)  // Default value
-  }
-
-  func testInitWithMajorMinorPatch() {
-    let version = OSVer(major: 1, minor: 2, patch: 3)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 3)
-  }
 
   func testInitWithVersionStyle() {
     let version = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 3)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 3)
   }
 
   func testInitWithOperatingSystemVersion() {
     let osVersion = OperatingSystemVersion(majorVersion: 1, minorVersion: 2, patchVersion: 3)
     let version = OSVer(osVersion)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 3)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 3)
+  }
+
+  // MARK: - Array Initialization Tests
+
+  func testInitWithArray() throws {
+    // Test with 3 elements
+    let version1 = try OSVer(array: [1, 2, 3])
+    XCTAssertEqual(version1.majorVersion, 1)
+    XCTAssertEqual(version1.minorVersion, 2)
+    XCTAssertEqual(version1.patchVersion, 3)
+
+    // Test with 2 elements
+    let version2 = try OSVer(array: [1, 2])
+    XCTAssertEqual(version2.majorVersion, 1)
+    XCTAssertEqual(version2.minorVersion, 2)
+    XCTAssertEqual(version2.patchVersion, 0)
+  }
+
+  func testInitWithInvalidArrayThrows() {
+    // Test with 1 element
+    XCTAssertThrowsError(try OSVer(array: [1])) { error in
+      XCTAssertTrue(error is OSVer.ParsingError)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidArrayLength)
+    }
+
+    // Test with 4 elements
+    XCTAssertThrowsError(try OSVer(array: [1, 2, 3, 4])) { error in
+      XCTAssertTrue(error is OSVer.ParsingError)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidArrayLength)
+    }
+
+    // Test with empty array
+    XCTAssertThrowsError(try OSVer(array: [])) { error in
+      XCTAssertTrue(error is OSVer.ParsingError)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidArrayLength)
+    }
+  }
+
+  // MARK: - OSVerParseable Tests
+
+  func testParseableString() throws {
+    let version1 = try OSVer(parsing: "1.2.3")
+    XCTAssertEqual(version1.majorVersion, 1)
+    XCTAssertEqual(version1.minorVersion, 2)
+    XCTAssertEqual(version1.patchVersion, 3)
+
+    let version2 = try OSVer(parsing: "1.2")
+    XCTAssertEqual(version2.majorVersion, 1)
+    XCTAssertEqual(version2.minorVersion, 2)
+    XCTAssertEqual(version2.patchVersion, 0)
+  }
+
+  func testParseableArray() throws {
+    let version1 = try OSVer(parsing: [1, 2, 3])
+    XCTAssertEqual(version1.majorVersion, 1)
+    XCTAssertEqual(version1.minorVersion, 2)
+    XCTAssertEqual(version1.patchVersion, 3)
+
+    let version2 = try OSVer(parsing: [1, 2])
+    XCTAssertEqual(version2.majorVersion, 1)
+    XCTAssertEqual(version2.minorVersion, 2)
+    XCTAssertEqual(version2.patchVersion, 0)
+  }
+
+  func testParseableInvalidInputs() {
+    XCTAssertThrowsError(try OSVer(parsing: "1.x.3"))
+    XCTAssertThrowsError(try OSVer(parsing: "invalid"))
+    XCTAssertThrowsError(try OSVer(parsing: [1]))
+    XCTAssertThrowsError(try OSVer(parsing: [1, 2, 3, 4]))
   }
 
   // MARK: - String Parsing Tests
 
   func testInitWithValidString() throws {
     let version = try OSVer(string: "1.2.3")
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 3)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 3)
   }
 
   func testInitWithValidStringNoPatch() throws {
     let version = try OSVer(string: "1.2")
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 0)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 0)
   }
 
   func testInitWithInvalidFormatThrows() {
+    // Test with single number
     XCTAssertThrowsError(try OSVer(string: "1")) { error in
       XCTAssertTrue(error is OSVer.ParsingError)
-      XCTAssertEqual(error as? OSVer.ParsingError, .invalidFormat)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidArrayLength)
+    }
+
+    // Test with four numbers
+    XCTAssertThrowsError(try OSVer(string: "1.2.3.4")) { error in
+      XCTAssertTrue(error is OSVer.ParsingError)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidArrayLength)
     }
   }
 
   func testInitWithInvalidNumbersThrows() {
     XCTAssertThrowsError(try OSVer(string: "1.x.3")) { error in
       XCTAssertTrue(error is OSVer.ParsingError)
-      XCTAssertEqual(error as? OSVer.ParsingError, .invalidNumbers)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidFormat)
+    }
+
+    XCTAssertThrowsError(try OSVer(string: "a.b")) { error in
+      XCTAssertTrue(error is OSVer.ParsingError)
+      XCTAssertEqual(error as? OSVer.ParsingError, .invalidFormat)
     }
   }
 
   // MARK: - Codable Tests
 
   func testEncodingAsObject() throws {
-    let version = OSVer(major: 1, minor: 2, patch: 3)
+    let version = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
     let encoder = JSONEncoder()
     encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.object
 
     let data = try encoder.encode(version)
     let json = try JSONSerialization.jsonObject(with: data) as! [String: Int]
 
-    XCTAssertEqual(json["major"], 1)
-    XCTAssertEqual(json["minor"], 2)
-    XCTAssertEqual(json["patch"], 3)
+    XCTAssertEqual(json["majorVersion"], 1)
+    XCTAssertEqual(json["minorVersion"], 2)
+    XCTAssertEqual(json["patchVersion"], 3)
   }
 
   func testEncodingAsString() throws {
-    let version = OSVer(major: 1, minor: 2, patch: 3)
+    let version = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
     let encoder = JSONEncoder()
     encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.string
 
@@ -120,59 +158,98 @@ final class OSVerTests: XCTestCase {
     XCTAssertEqual(string, "1.2.3")
   }
 
+  func testEncodingAsArray() throws {
+    let version = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let encoder = JSONEncoder()
+    encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.array
+
+    let data = try encoder.encode(version)
+    let array = try JSONSerialization.jsonObject(with: data) as! [Int]
+
+    XCTAssertEqual(array, [1, 2, 3])
+  }
+
   func testDecodingFromObject() throws {
     let json = """
       {
-          "major": 1,
-          "minor": 2,
-          "patch": 3
+          "majorVersion": 1,
+          "minorVersion": 2,
+          "patchVersion": 3
       }
       """.data(using: .utf8)!
 
     let version = try JSONDecoder().decode(OSVer.self, from: json)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 3)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 3)
   }
 
   func testDecodingFromObjectWithoutPatch() throws {
     let json = """
       {
-          "major": 1,
-          "minor": 2
+          "majorVersion": 1,
+          "minorVersion": 2
       }
       """.data(using: .utf8)!
 
     let version = try JSONDecoder().decode(OSVer.self, from: json)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 0)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 0)
   }
 
   func testDecodingFromString() throws {
     let json = "\"1.2.3\"".data(using: .utf8)!
 
     let version = try JSONDecoder().decode(OSVer.self, from: json)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 3)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 3)
   }
 
   func testDecodingFromStringWithoutPatch() throws {
     let json = "\"1.2\"".data(using: .utf8)!
 
     let version = try JSONDecoder().decode(OSVer.self, from: json)
-    XCTAssertEqual(version.major, 1)
-    XCTAssertEqual(version.minor, 2)
-    XCTAssertEqual(version.patch, 0)
+    XCTAssertEqual(version.majorVersion, 1)
+    XCTAssertEqual(version.minorVersion, 2)
+    XCTAssertEqual(version.patchVersion, 0)
+  }
+
+  func testDecodingFromArray() throws {
+    // Test with 3 elements
+    let json1 = "[1, 2, 3]".data(using: .utf8)!
+    let version1 = try JSONDecoder().decode(OSVer.self, from: json1)
+    XCTAssertEqual(version1.majorVersion, 1)
+    XCTAssertEqual(version1.minorVersion, 2)
+    XCTAssertEqual(version1.patchVersion, 3)
+
+    // Test with 2 elements
+    let json2 = "[1, 2]".data(using: .utf8)!
+    let version2 = try JSONDecoder().decode(OSVer.self, from: json2)
+    XCTAssertEqual(version2.majorVersion, 1)
+    XCTAssertEqual(version2.minorVersion, 2)
+    XCTAssertEqual(version2.patchVersion, 0)
+  }
+
+  func testDecodingFromInvalidArrayLength() {
+    // Test with 1 element
+    XCTAssertThrowsError(try JSONDecoder().decode(OSVer.self, from: "[1]".data(using: .utf8)!))
+
+    // Test with 4 elements
+    XCTAssertThrowsError(
+      try JSONDecoder().decode(OSVer.self, from: "[1, 2, 3, 4]".data(using: .utf8)!))
+
+    // Test with empty array
+    XCTAssertThrowsError(try JSONDecoder().decode(OSVer.self, from: "[]".data(using: .utf8)!))
   }
 
   // MARK: - Equatable Tests
 
   func testEquality() {
-    let version1 = OSVer(major: 1, minor: 2, patch: 3)
-    let version2 = OSVer(major: 1, minor: 2, patch: 3)
-    let version3 = OSVer(major: 1, minor: 2, patch: 4)
+    let version1 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let version2 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let version3 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 4)
 
     XCTAssertEqual(version1, version2)
     XCTAssertNotEqual(version1, version3)
@@ -181,9 +258,9 @@ final class OSVerTests: XCTestCase {
   // MARK: - Hashable Tests
 
   func testHashable() {
-    let version1 = OSVer(major: 1, minor: 2, patch: 3)
-    let version2 = OSVer(major: 1, minor: 2, patch: 3)
-    let version3 = OSVer(major: 1, minor: 2, patch: 4)
+    let version1 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let version2 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let version3 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 4)
 
     var set = Set<OSVer>()
     set.insert(version1)
@@ -194,8 +271,8 @@ final class OSVerTests: XCTestCase {
   }
 
   func testHashConsistency() {
-    let version1 = OSVer(major: 1, minor: 2, patch: 3)
-    let version2 = OSVer(major: 1, minor: 2, patch: 3)
+    let version1 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let version2 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
 
     XCTAssertEqual(version1.hashValue, version2.hashValue)
   }
@@ -203,10 +280,10 @@ final class OSVerTests: XCTestCase {
   // MARK: - Comparable Tests
 
   func testComparable() {
-    let version1 = OSVer(major: 1, minor: 2, patch: 3)
-    let version2 = OSVer(major: 1, minor: 2, patch: 4)
-    let version3 = OSVer(major: 1, minor: 3, patch: 0)
-    let version4 = OSVer(major: 2, minor: 0, patch: 0)
+    let version1 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
+    let version2 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 4)
+    let version3 = OSVer(majorVersion: 1, minorVersion: 3, patchVersion: 0)
+    let version4 = OSVer(majorVersion: 2, minorVersion: 0, patchVersion: 0)
 
     XCTAssertLessThan(version1, version2)
     XCTAssertLessThan(version2, version3)
@@ -219,9 +296,9 @@ final class OSVerTests: XCTestCase {
   }
 
   func testComparableDefaultPatch() {
-    let version1 = OSVer(major: 1, minor: 2)
-    let version2 = OSVer(major: 1, minor: 2, patch: 0)
-    let version3 = OSVer(major: 1, minor: 2, patch: 1)
+    let version1 = OSVer(majorVersion: 1, minorVersion: 2)
+    let version2 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 0)
+    let version3 = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 1)
 
     XCTAssertEqual(version1, version2)
     XCTAssertLessThan(version1, version3)
@@ -230,152 +307,10 @@ final class OSVerTests: XCTestCase {
   // MARK: - Description Tests
 
   func testDescription() {
-    let version = OSVer(major: 1, minor: 2, patch: 3)
+    let version = OSVer(majorVersion: 1, minorVersion: 2, patchVersion: 3)
     XCTAssertEqual(version.description, "1.2.3")
 
-    let versionNoPatch = OSVer(major: 1, minor: 2)
+    let versionNoPatch = OSVer(majorVersion: 1, minorVersion: 2)
     XCTAssertEqual(versionNoPatch.description, "1.2.0")
-  }
-
-  // MARK: - Fuzzy Tests
-
-  func testFuzzyInitialization() {
-    for _ in 0..<1_000 {
-      let major = Int.random(in: 0...100)
-      let minor = Int.random(in: 0...100)
-      let patch = Int.random(in: 0...100)
-
-      let version = OSVer(major: major, minor: minor, patch: patch)
-      XCTAssertEqual(version.major, major)
-      XCTAssertEqual(version.minor, minor)
-      XCTAssertEqual(version.patch, patch)
-    }
-  }
-
-  func testFuzzyComparison() {
-    for _ in 0..<1_000 {
-      let major1 = Int.random(in: 0...10)
-      let minor1 = Int.random(in: 0...10)
-      let patch1 = Int.random(in: 0...10)
-
-      let major2 = Int.random(in: 0...10)
-      let minor2 = Int.random(in: 0...10)
-      let patch2 = Int.random(in: 0...10)
-
-      let version1 = OSVer(major: major1, minor: minor1, patch: patch1)
-      let version2 = OSVer(major: major2, minor: minor2, patch: patch2)
-
-      // Test transitivity
-      if version1 < version2 {
-        XCTAssertFalse(version2 < version1)
-        XCTAssertFalse(version1 == version2)
-      } else if version2 < version1 {
-        XCTAssertFalse(version1 < version2)
-        XCTAssertFalse(version1 == version2)
-      } else {
-        XCTAssertEqual(version1, version2)
-      }
-    }
-  }
-
-  func testFuzzyCodable() {
-    let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
-
-    for _ in 0..<1_000 {
-      let major = Int.random(in: 0...100)
-      let minor = Int.random(in: 0...100)
-      let patch = Int.random(in: 0...100)
-
-      let original = OSVer(major: major, minor: minor, patch: patch)
-
-      // Test object encoding/decoding
-      do {
-        encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.object
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(OSVer.self, from: data)
-        XCTAssertEqual(original, decoded)
-      } catch {
-        XCTFail("Failed to encode/decode as object: \(error)")
-      }
-
-      // Test string encoding/decoding
-      do {
-        encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.string
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(OSVer.self, from: data)
-        XCTAssertEqual(original, decoded)
-      } catch {
-        XCTFail("Failed to encode/decode as string: \(error)")
-      }
-    }
-  }
-
-  func testFuzzyStringParsing() {
-    for _ in 0..<1_000 {
-      let major = Int.random(in: 0...100)
-      let minor = Int.random(in: 0...100)
-      let patch = Int.random(in: 0...100)
-
-      let versionString = "\(major).\(minor).\(patch)"
-
-      do {
-        let version = try OSVer(string: versionString)
-        XCTAssertEqual(version.major, major)
-        XCTAssertEqual(version.minor, minor)
-        XCTAssertEqual(version.patch, patch)
-      } catch {
-        XCTFail("Failed to parse valid version string: \(versionString)")
-      }
-    }
-  }
-
-  func testFuzzyHashable() {
-    var versions = Set<OSVer>()
-    var originalCount = 0
-
-    for _ in 0..<1_000 {
-      let major = Int.random(in: 0...10)
-      let minor = Int.random(in: 0...10)
-      let patch = Int.random(in: 0...10)
-
-      let version = OSVer(major: major, minor: minor, patch: patch)
-      let (inserted, _) = versions.insert(version)
-      if inserted {
-        originalCount += 1
-      }
-
-      // Test that identical versions have same hash
-      let duplicate = OSVer(major: major, minor: minor, patch: patch)
-      versions.insert(duplicate)
-      XCTAssertEqual(versions.count, originalCount)
-    }
-  }
-
-  func testFuzzyEdgeCases() {
-    let edgeCaseValues = [Int.min, Int.max, 0, -1, 1]
-
-    for major in edgeCaseValues {
-      for minor in edgeCaseValues {
-        for patch in edgeCaseValues {
-          let version = OSVer(major: major, minor: minor, patch: patch)
-          XCTAssertEqual(version.major, major)
-          XCTAssertEqual(version.minor, minor)
-          XCTAssertEqual(version.patch, patch)
-
-          // Test serialization
-          let encoder = JSONEncoder()
-          encoder.userInfo[OSVer.encodingFormatKey] = OSVer.EncodingFormat.object
-
-          do {
-            let data = try encoder.encode(version)
-            let decoded = try JSONDecoder().decode(OSVer.self, from: data)
-            XCTAssertEqual(version, decoded)
-          } catch {
-            XCTFail("Failed to encode/decode edge case: \(major).\(minor).\(patch)")
-          }
-        }
-      }
-    }
   }
 }
