@@ -38,12 +38,12 @@ extension OSVer: Comparable {
   /// - Returns: `true` if the left-hand side is less than the right-hand side,
   /// `false` otherwise.
   public static func < (lhs: OSVer, rhs: OSVer) -> Bool {
-    if lhs.major != rhs.major {
-      return lhs.major < rhs.major
+    if lhs.majorVersion != rhs.majorVersion {
+      return lhs.majorVersion < rhs.majorVersion
     }
-    if lhs.minor != rhs.minor {
-      return lhs.minor < rhs.minor
+    if lhs.minorVersion != rhs.minorVersion {
+      return lhs.minorVersion < rhs.minorVersion
     }
-    return lhs.patch < rhs.patch
+    return lhs.patchVersion < rhs.patchVersion
   }
 }
